@@ -73,6 +73,20 @@ intermediários (`.pkl`/`.json`) em `data/`. O relatório final é gerado em
 
 ## Contribuições da equipe (Pode mudar, só pra ter uma base inicial, mas o intuito é todos ajudarem em todos os processos)
 
-Mell - Relatório
-Brayan - Análise e Classificação
-Nicolas - Clustering
+- Mell - Relatório
+- Brayan - Análise e Classificação
+- Nicolas - Clustering
+
+## Modelos Utilizados
+
+Random Forest - Brayan Martins, testes iniciais
+Gradient Boosting - Nicolas Marin, testes iniciais
+
+## Focos principais agorar
+
+- Consertarr o vazamento do cluster geográfico, ajuste o KMeans só com as coordenadas do treino, depois use .predict() (não .fit_predict()) nas coordenadas de teste.
+- Troque o split único por validação cruzada (StratifiedKFold, 5 folds), um único split de 80/20 pode dar sorte ou azar, CV te dá uma média + desvio padrão, muito mais confiável.
+- Separe tuning de avaliação final, hiperparâmetros (profundidade, n_estimators, learning_rate) devem ser escolhidos via GridSearchCV/RandomizedSearchCV dentro dos folds de treino, nunca olhando o resultado no teste e ajustando depois. Eu usei valores que chutei de cabeça, sem tuning nenhum.
+- Vazamento leve a checar, month, season e day_of_week vêm todos da mesma Created Date, não é vazamento (são conhecidos no momento da abertura do chamado), mas é redundância/multicolinearidade. Não quebra nada em árvores, mas vale mencionar se for tentar modelo linear.
+- Mantenha o teste intocado até o fim, nada de olhar métrica de teste, ajustar hiperparâmetro, testar de novo, isso também é uma forma (sutil) de vazamento por "espiar" o conjunto de avaliação repetidamente.
+

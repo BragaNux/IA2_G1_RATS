@@ -79,8 +79,8 @@ intermediários (`.pkl`/`.json`) em `data/`. O relatório final é gerado em
 
 ## Modelos Utilizados
 
-Random Forest - Brayan Martins, testes iniciais
-Gradient Boosting - Nicolas Marin, testes iniciais
+- Random Forest - Brayan Martins, testes iniciais
+- Gradient Boosting - Nicolas Marin, testes iniciais
 
 ## Focos principais agorar
 

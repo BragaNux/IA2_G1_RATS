@@ -90,3 +90,4 @@ Gradient Boosting - Nicolas Marin, testes iniciais
 - Vazamento leve a checar, month, season e day_of_week vêm todos da mesma Created Date, não é vazamento (são conhecidos no momento da abertura do chamado), mas é redundância/multicolinearidade. Não quebra nada em árvores, mas vale mencionar se for tentar modelo linear.
 - Mantenha o teste intocado até o fim, nada de olhar métrica de teste, ajustar hiperparâmetro, testar de novo, isso também é uma forma (sutil) de vazamento por "espiar" o conjunto de avaliação repetidamente.
 
+ADICIONA DEPOIS O RHAUANI AO REPOSITORIO

@@ -91,3 +91,9 @@ intermediários (`.pkl`/`.json`) em `data/`. O relatório final é gerado em
 - Mantenha o teste intocado até o fim, nada de olhar métrica de teste, ajustar hiperparâmetro, testar de novo, isso também é uma forma (sutil) de vazamento por "espiar" o conjunto de avaliação repetidamente.
 
 ADICIONA DEPOIS O RHAUANI AO REPOSITORIO
+
+---
+Notas:
+Passamos por random forest, gradient boosting, e one-hot encoding. 
+Maior dificuldade está sendo os dados de baixa qualidade.
+Acurácia máxima até o momento: 75%

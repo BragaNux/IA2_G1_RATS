@@ -12,9 +12,9 @@ Este trabalho desenvolve um modelo preditivo capaz de classificar a resolução 
 
 ## Datasets
 
-1. **NYC Rat Sightings (311 Service Requests)** — [Kaggle](https://www.kaggle.com/datasets/new-york-city/nyc-rat-sightings). Registros de reclamações/avistamentos de roedores feitos por cidadãos via 311, com data de abertura/fechamento, localização geográfica, Borough, tipo de local e status do chamado. ~102 mil registros brutos (2010–2017).
-2. **DOHMH Rodent Inspection** — [NYC Open Data](https://data.cityofnewyork.us/Health/Rodent-Inspection/p937-wjvj). Inspeções sanitárias/controle de pragas realizadas pelo Department of Health and Mental Hygiene, usadas para medir densidade de atividade de inspeção próxima a cada chamado. PARA DOWNLOAD DO CSV, CLIQUE NO LINK: https://data.cityofnewyork.us/resource/p937-wjvj.csv?$limit=500000&$where=inspection_date%20between%20%272010-01-01%27%20and%20%272017-12-31%27
-3. **NOAA GHCN-Daily, estação Central Park (USW00094728)** — [NOAA](https://www.ncei.noaa.gov/data/global-historical-climatology-network-daily). Temperatura mínima/máxima e precipitação diárias, usadas para construir o sinal climático (médias móveis de 3/7 dias).
+1. **NYC Rat Sightings (311 Service Requests)** — [Kaggle](https://www.kaggle.com/datasets/new-york-city/nyc-rat-sightings). Registros de reclamações/avistamentos de roedores feitos por cidadãos via 311, com data de abertura/fechamento, localização geográfica, Borough, tipo de local e status do chamado. ~102 mil registros brutos (2010–2017). *PARA DOWNLOAD DO CSV, CLIQUE NO LINK ACIMA E FAÇA O DOWNLOAD*
+2. **DOHMH Rodent Inspection** — [NYC Open Data](https://data.cityofnewyork.us/Health/Rodent-Inspection/p937-wjvj). Inspeções sanitárias/controle de pragas realizadas pelo Department of Health and Mental Hygiene, usadas para medir densidade de atividade de inspeção próxima a cada chamado. *PARA DOWNLOAD DO CSV, CLIQUE NO LINK:* https://data.cityofnewyork.us/resource/p937-wjvj.csv?$limit=500000&$where=inspection_date%20between%20%272010-01-01%27%20and%20%272017-12-31%27
+3. **NOAA GHCN-Daily, estação Central Park (USW00094728)** — [NOAA](https://www.ncei.noaa.gov/data/global-historical-climatology-network-daily). Temperatura mínima/máxima e precipitação diárias, usadas para construir o sinal climático (médias móveis de 3/7 dias). *PARA DOWNLOAD DO CSV, BAIXE O ARQUIVO USW00094728.CSV*
 
 Cópias locais esperadas em `data/` (ver seção de reprodução).
 

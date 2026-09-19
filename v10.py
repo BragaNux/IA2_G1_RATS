@@ -1,35 +1,3 @@
-"""
-V10 - Evolucao do modelo V9 (Rat Sightings NYC 311).
-
-RESULTADOS MEDIDOS (mesmo protocolo do v9: split aleatorio 80/20, seed 42):
-    v9 original (tunado)                 CV 0.7348 | Teste AUC 0.7442 | ACC ~0.68
-    v10 (este arquivo, tunado)           CV 0.7748 | Teste AUC 0.7836 | ACC 0.7098
-    precisao nos 20% mais sinalizados:   v9 = 75,0%   ->   v10 = 84,5%
-
-O QUE MUDOU (cada item foi medido isoladamente, ver secao EXPERIMENTOS no fim):
- 1. BUG CORRIGIDO: calcular_workload() devolvia um Index com os valores na ordem
-    ORDENADA (Borough, Created Date) e o pandas atribuia isso POSICIONALMENTE ao
-    DataFrame na ordem original -> a feature mais importante do v9 estava embaralhada
-    (correlacao de apenas -0,26 com o valor correto). Agora retorna uma Series indexada.
- 2. vel_recente_borough_30d / 90d: velocidade media de fechamento do borough no periodo
-    imediatamente anterior ao mes do chamado (so chamados JA fechados). +0,013 AUC.
- 3. Address Type e Community Board como categoricas (TargetEncoder). +0,007 AUC.
- 4. hour, doy_sin, doy_cos: hora de abertura e sazonalidade fina. +0,003 AUC.
- 5. Historico do endereco/zip: quantos chamados anteriores no mesmo ponto e ha quantos
-    dias foi o ultimo. +0,003 AUC.
- 6. Vizinhanca enriquecida: alem da media (k=30), mediana, fracao de vizinhos lentos,
-    distancia media dos vizinhos e uma segunda escala (k=100).
- 7. Hiperparametros: max_iter 400 + early_stopping + max_leaf_nodes 63 (o grid do v9
-    parava em max_iter=200 e sem early stopping - estava subtreinando). Sozinho vale
-    cerca de +0,03 AUC.
-
-AVISO HONESTO (colocar no relatorio):
-    Sob split TEMPORAL (treina ate ago/2016, testa depois) TODOS os modelos caem para
-    AUC ~0,59 - inclusive o v9 original (0,5948) e o v10 (0,5827-0,5947). Ou seja, o
-    numero de 0,74-0,78 vale para "prever chamados do mesmo periodo", nao para "prever
-    o futuro". Isso NAO foi introduzido pelas features novas: e uma propriedade do
-    problema (o regime de atendimento da prefeitura muda de ano para ano).
-"""
 import numpy as np
 import pandas as pd
 import warnings
@@ -55,9 +23,7 @@ RAIO_INSPECAO_RAD = 300 / 6371000
 JANELA_INSPECAO_DIAS = 365
 
 
-# =====================================================================
-# 1. CLIMA
-# =====================================================================
+#clima
 def carregar_clima(caminho="USW00094728.csv"):
     c = pd.read_csv(caminho, low_memory=False)
     c["DATE"] = pd.to_datetime(c["DATE"])
@@ -77,9 +43,7 @@ def carregar_clima(caminho="USW00094728.csv"):
     return c
 
 
-# =====================================================================
-# 2. WORKLOAD (sweep-line) - AGORA RETORNANDO SERIES ALINHADA
-# =====================================================================
+#workload
 def calcular_workload(df, window_days=JANELA_WORKLOAD_DIAS, chave="Borough"):
     d = df.sort_values(by=[chave, "Created Date"])
     eventos = []
@@ -106,9 +70,7 @@ def calcular_workload(df, window_days=JANELA_WORKLOAD_DIAS, chave="Borough"):
     return pd.Series(resultado).reindex(df.index).fillna(0)
 
 
-# =====================================================================
-# 3. VIZINHANCA HISTORICA (KNN causal) - agora com 4 estatisticas
-# =====================================================================
+#vizinhança histórica
 def calcular_eficiencia_vizinhanca(df, k=30, janela_dias=JANELA_VIZINHANCA_DIAS, prefixo="local"):
     df = df.copy().reset_index(drop=True)
     df["ano_mes"] = df["Created Date"].dt.to_period("M")
@@ -143,9 +105,7 @@ def calcular_eficiencia_vizinhanca(df, k=30, janela_dias=JANELA_VIZINHANCA_DIAS,
     return df
 
 
-# =====================================================================
-# 4. INSPECOES DOHMH
-# =====================================================================
+#inspeções DOHMH
 def calcular_features_inspecao(df_chamados, caminho="p937-wjvj.csv",
                                raio_rad=RAIO_INSPECAO_RAD, janela_dias=JANELA_INSPECAO_DIAS):
     insp = pd.read_csv(caminho, low_memory=False,
@@ -181,9 +141,7 @@ def calcular_features_inspecao(df_chamados, caminho="p937-wjvj.csv",
     return df
 
 
-# =====================================================================
-# 5. FEATURES NOVAS: historico do ponto e velocidade recente do borough
-# =====================================================================
+#features novas
 def historico_endereco(df):
     d = df.copy().reset_index(drop=True)
     d["addr_key"] = (d["Incident Address"].fillna("NA").astype(str).str.upper().str.strip()
@@ -218,9 +176,7 @@ def velocidade_recente_borough(df, janelas=(30, 90)):
     return d
 
 
-# =====================================================================
-# 6. PIPELINE DE DADOS
-# =====================================================================
+#pipeline de dados
 def preparar_dataset(caminho_ratos="Rat_Sightings.csv", caminho_clima="USW00094728.csv",
                      caminho_inspecao="p937-wjvj.csv"):
     clima = carregar_clima(caminho_clima)
@@ -303,9 +259,7 @@ def adicionar_anomalia(X_train, X_test):
     return X_train, X_test
 
 
-# =====================================================================
-# 7. VALIDACAO TEMPORAL (teste de realidade - rodar e reportar!)
-# =====================================================================
+#validação temporal
 def validacao_temporal(df_clean, params):
     d = df_clean.sort_values("Created Date")
     corte = d["Created Date"].quantile(0.8)
